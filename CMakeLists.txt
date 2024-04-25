@@ -28,5 +28,8 @@ include_directories(
 file(GLOB_RECURSE SRC src/*.cpp)
 add_executable(SearchEngine ${SRC})
 
-
-target_link_libraries(SearchEngine PRIVATE CURL::libcurl ws2_32)
+if(WIN32)
+    target_link_libraries(SearchEngine PRIVATE CURL::libcurl ws2_32)
+else()
+    target_link_libraries(SearchEngine PRIVATE CURL::libcurl)
+endif()
