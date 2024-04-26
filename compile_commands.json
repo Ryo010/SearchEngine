@@ -1,8 +1,0 @@
-[
-{
-  "directory": "D:/SearchEngine",
-  "command": "C:\\msys64\\mingw64\\bin\\clang++.exe -ID:/SearchEngine -ID:/SearchEngine/src -std=gnu++20 -o CMakeFiles\\SearchEngine.dir\\src\\main.cpp.obj -c D:\\SearchEngine\\src\\main.cpp",
-  "file": "D:\\SearchEngine\\src\\main.cpp",
-  "output": "CMakeFiles\\SearchEngine.dir\\src\\main.cpp.obj"
-}
-]
