@@ -18,6 +18,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Create the main executable for SearchEngine
 project(SearchEngine)
 
+add_subdirectory("Vendor/nlohmann-json")
+
 find_package(CURL REQUIRED)
 message("Found curl!")
 
@@ -29,7 +31,7 @@ file(GLOB_RECURSE SRC src/*.cpp)
 add_executable(SearchEngine ${SRC})
 
 if(WIN32)
-    target_link_libraries(SearchEngine PRIVATE CURL::libcurl ws2_32)
+    target_link_libraries(SearchEngine PRIVATE CURL::libcurl ws2_32 nlohmann_json::nlohmann_json)
 else()
-    target_link_libraries(SearchEngine PRIVATE CURL::libcurl)
+    target_link_libraries(SearchEngine PRIVATE CURL::libcurl nlohmann_json::nlohmann_json)
 endif()

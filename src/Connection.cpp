@@ -9,7 +9,7 @@
 Connector::Connector()
     : m_CurlHandle(curl_easy_init())
 {
-    if(!m_CurlHandle)
+    if (!m_CurlHandle)
     {
         std::cerr << "Failed to initialize curl!" << std::endl;
     }
@@ -17,7 +17,7 @@ Connector::Connector()
 
 void Connector::ConnectToServer()
 {
-    if(!m_CurlHandle)
+    if (!m_CurlHandle)
     {
         std::cout << "libcurl is not initialized. Initializing..." << std::endl;
         m_CurlHandle = curl_easy_init();
@@ -37,20 +37,19 @@ void Connector::ConnectToServer()
     curl_easy_perform(m_CurlHandle);
 }
 
-std::string Connector::SendRequest(const std::string &item)
+std::string Connector::SendRequest(const std::string &item, const std::string &engine, const std::string &key)
 {
     std::string response;
 
-    if(!m_CurlHandle)
+    if (!m_CurlHandle)
     {
         std::cerr << "libcurl not initialized. Aborting..." << std::endl;
         return response;
     }
 
     // Construct "dynamic" URL based on user input
-    std::string url = "https://serpapi.com/search?q=" + item;
+    std::string url = "https://serpapi.com/search?engine=" + engine + "&q=" + item + "&api_key=" + key;
     curl_easy_setopt(m_CurlHandle, CURLOPT_URL, url.c_str());
-
 
     // Set the request method
     curl_easy_setopt(m_CurlHandle, CURLOPT_CUSTOMREQUEST, "GET");
@@ -85,19 +84,19 @@ std::string Connector::SendRequest(const std::string &item)
  * @param userp
  * @return size_t
  */
-size_t Connector::WriteCallbackC(void* contents, size_t size, size_t nmemb, void* userp)
+size_t Connector::WriteCallbackC(void *contents, size_t size, size_t nmemb, void *userp)
 {
     size_t totalSize = size * nmemb;
-    Connector* connector = static_cast<Connector*>(userp);
+    Connector *connector = static_cast<Connector *>(userp);
 
     if (connector)
     {
-        std::string response(static_cast<char*>(contents), totalSize);
+        std::string response(static_cast<char *>(contents), totalSize);
 
         // Check if the response contains the unwanted error message
         if (response.find("{\"error\": \"https://api.warframe.market/ [GET]\"}") != std::string::npos)
         {
-            return totalSize;  // Ignore this message
+            return totalSize; // Ignore this message
         }
     }
     return totalSize;
@@ -115,7 +114,7 @@ size_t Connector::WriteCallbackC(void* contents, size_t size, size_t nmemb, void
 size_t Connector::WriteCallbackS(void *contents, size_t size, size_t nmemb, std::ostream *os)
 {
     size_t totalSize = size * nmemb;
-    os->write(static_cast<char*>(contents), totalSize);
+    os->write(static_cast<char *>(contents), totalSize);
     return totalSize;
 }
 
