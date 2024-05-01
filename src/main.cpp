@@ -1,17 +1,54 @@
+#include <cstddef>
+#include <fstream>
 #include <nlohmann/json.hpp>
 #include <iostream>
 #include <string>
 #include "Connection.h"
+
 using json = nlohmann::json;
+
+std::string GetAPIKey(const std::string& filename)
+{
+    std::ifstream file(filename);
+    std::string line;
+    
+    while(std::getline(file, line))
+    {
+        if(line.find("API_KEY") != std::string::npos)
+        {
+            size_t startPos = line.find("=") + 1;
+            size_t endPos = line.find("\n");
+            std::string APIKey = line.substr(startPos, endPos - startPos);
+            return APIKey;
+        }
+    }
+
+    return "";
+}
 
 int main()
 {
     Connector connector;
     connector.ConnectToServer();
+   
 
     struct Request r;
     r.Engine = "google";
-    r.APIKey = "7ee6620bc6c8e251b3012ea6d6576ed72c72dcc37f5a258160ec7b5d6a92f75a";
+
+    std::string APIKey = GetAPIKey(".env");
+    if(!APIKey.empty())
+    {
+        std::cout << "Found API Key!" << std::endl; 
+    }
+    else 
+    {
+        std::cout << "No APIKey found, please enter manually or create a file '.env' to store the API Key like so:\n"
+                  << "API_KEY=yourapikey\n";
+        std::cin >> APIKey;
+    }
+
+
+    r.APIKey = APIKey;
     std::cout << "Enter what you want to search: ";
     std::cin >> r.SearchRequest;
 
